@@ -1,0 +1,36 @@
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+
+import User from '@modules/users/infra/typeorm/entities/User';
+
+@Entity('appointments')
+class Appointment {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  // eslint-disable-next-line camelcase
+  provider_id: string;
+
+  @ManyToOne(() => User) // muito User para um agendamento
+  @JoinColumn({ name: 'provider_id' })
+  provider: User;
+
+  @Column('time with time zone')
+  date: Date;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+}
+
+export default Appointment;
