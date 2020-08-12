@@ -1,16 +1,4 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,45 +40,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("@shared/errors/AppError"));
-var tsyringe_1 = require("tsyringe");
-var CreateUserService = /** @class */ (function () {
-    function CreateUserService(usersRepository, hashProvider) {
-        this.usersRepository = usersRepository;
-        this.hashProvider = hashProvider;
-    }
-    CreateUserService.prototype.execute = function (_a) {
-        var name = _a.name, email = _a.email, password = _a.password;
-        return __awaiter(this, void 0, void 0, function () {
-            var checkUserExists, hashedPassword, user;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.usersRepository.findByEmail(email)];
-                    case 1:
-                        checkUserExists = _b.sent();
-                        if (checkUserExists) {
-                            throw new AppError_1.default('Email address already used.');
-                        }
-                        return [4 /*yield*/, this.hashProvider.generateHash(password)];
-                    case 2:
-                        hashedPassword = _b.sent();
-                        return [4 /*yield*/, this.usersRepository.create({
-                                name: name,
-                                email: email,
-                                password: hashedPassword,
-                            })];
-                    case 3:
-                        user = _b.sent();
-                        return [2 /*return*/, user];
-                }
-            });
+var FakeUsersRepository_1 = __importDefault(require("../repositories/fakes/FakeUsersRepository"));
+var CreateUserService_1 = __importDefault(require("./CreateUserService"));
+var FakeHashProvider_1 = __importDefault(require("../providers/HashProvider/fakes/FakeHashProvider"));
+describe('CreateUser', function () {
+    it('shold be able to create a new users', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var fakeUsersRepository, fakeHashProvider, createUser, user;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fakeUsersRepository = new FakeUsersRepository_1.default();
+                    fakeHashProvider = new FakeHashProvider_1.default();
+                    createUser = new CreateUserService_1.default(fakeUsersRepository, fakeHashProvider);
+                    return [4 /*yield*/, createUser.execute({
+                            name: 't123',
+                            email: 't123@gmail.com',
+                            password: '123',
+                        })];
+                case 1:
+                    user = _a.sent();
+                    expect(user).toHaveProperty('id');
+                    return [2 /*return*/];
+            }
         });
-    };
-    CreateUserService = __decorate([
-        tsyringe_1.injectable(),
-        __param(0, tsyringe_1.inject('UsersRepository')),
-        __param(1, tsyringe_1.inject('HashProvider')),
-        __metadata("design:paramtypes", [Object, Object])
-    ], CreateUserService);
-    return CreateUserService;
-}());
-exports.default = CreateUserService;
+    }); });
+    it('shold not be able to create two users on the some email', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var fakeUsersRepository, fakeHashProvider, createUser;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fakeUsersRepository = new FakeUsersRepository_1.default();
+                    fakeHashProvider = new FakeHashProvider_1.default();
+                    createUser = new CreateUserService_1.default(fakeUsersRepository, fakeHashProvider);
+                    return [4 /*yield*/, createUser.execute({
+                            name: 't123',
+                            email: 't123@gmail.com',
+                            password: '123',
+                        })];
+                case 1:
+                    _a.sent();
+                    expect(createUser.execute({
+                        name: 't123',
+                        email: 't123@gmail.com',
+                        password: '123',
+                    })).rejects.toBeInstanceOf(AppError_1.default);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});

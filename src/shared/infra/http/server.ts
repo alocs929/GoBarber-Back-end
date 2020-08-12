@@ -14,8 +14,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json()); // esse vem primeiro para que seja convertido antes de
-app.use('/files', express.static(uploadConfig.directory));
 // chegar nas rotas
+app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes); // esse trecho é como se o index.ts estivesse aqui
 
 // middlewares para tratar erros

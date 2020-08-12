@@ -11,11 +11,12 @@ var upload_1 = __importDefault(require("@config/upload"));
 var AppError_1 = __importDefault(require("@shared/errors/AppError"));
 var routes_1 = __importDefault(require("./routes"));
 require("@shared/infra/typeorm");
+require("@shared/container");
 var app = express_1.default();
 app.use(cors_1.default());
 app.use(express_1.default.json()); // esse vem primeiro para que seja convertido antes de
-app.use('/files', express_1.default.static(upload_1.default.directory));
 // chegar nas rotas
+app.use('/files', express_1.default.static(upload_1.default.uploadsFolder));
 app.use(routes_1.default); // esse trecho é como se o index.ts estivesse aqui
 // middlewares para tratar erros
 app.use(function (err, request, response, _) {

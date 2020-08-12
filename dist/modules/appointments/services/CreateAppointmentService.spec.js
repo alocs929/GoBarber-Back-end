@@ -1,16 +1,4 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,45 +40,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AppError_1 = __importDefault(require("@shared/errors/AppError"));
-var tsyringe_1 = require("tsyringe");
-var CreateUserService = /** @class */ (function () {
-    function CreateUserService(usersRepository, hashProvider) {
-        this.usersRepository = usersRepository;
-        this.hashProvider = hashProvider;
-    }
-    CreateUserService.prototype.execute = function (_a) {
-        var name = _a.name, email = _a.email, password = _a.password;
-        return __awaiter(this, void 0, void 0, function () {
-            var checkUserExists, hashedPassword, user;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.usersRepository.findByEmail(email)];
-                    case 1:
-                        checkUserExists = _b.sent();
-                        if (checkUserExists) {
-                            throw new AppError_1.default('Email address already used.');
-                        }
-                        return [4 /*yield*/, this.hashProvider.generateHash(password)];
-                    case 2:
-                        hashedPassword = _b.sent();
-                        return [4 /*yield*/, this.usersRepository.create({
-                                name: name,
-                                email: email,
-                                password: hashedPassword,
-                            })];
-                    case 3:
-                        user = _b.sent();
-                        return [2 /*return*/, user];
-                }
-            });
+var FakeAppointmentsRepository_1 = __importDefault(require("../repositories/fakes/FakeAppointmentsRepository"));
+var CreateAppointmentService_1 = __importDefault(require("./CreateAppointmentService"));
+describe('CreateAppointment', function () {
+    it('should be able to create a new appointment', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var fakeAppointmentsRepository, createAppointment, appointment;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fakeAppointmentsRepository = new FakeAppointmentsRepository_1.default();
+                    createAppointment = new CreateAppointmentService_1.default(fakeAppointmentsRepository);
+                    return [4 /*yield*/, createAppointment.execute({
+                            date: new Date(),
+                            provider_id: '123123',
+                        })];
+                case 1:
+                    appointment = _a.sent();
+                    expect(appointment).toHaveProperty('id');
+                    expect(appointment.provider_id).toBe('123123');
+                    return [2 /*return*/];
+            }
         });
-    };
-    CreateUserService = __decorate([
-        tsyringe_1.injectable(),
-        __param(0, tsyringe_1.inject('UsersRepository')),
-        __param(1, tsyringe_1.inject('HashProvider')),
-        __metadata("design:paramtypes", [Object, Object])
-    ], CreateUserService);
-    return CreateUserService;
-}());
-exports.default = CreateUserService;
+    }); });
+    it('should not be able to create two appointment on the same time', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var fakeAppointmentsRepository, createAppointment, appointmentDate;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fakeAppointmentsRepository = new FakeAppointmentsRepository_1.default();
+                    createAppointment = new CreateAppointmentService_1.default(fakeAppointmentsRepository);
+                    appointmentDate = new Date(2020, 4, 10, 11);
+                    return [4 /*yield*/, createAppointment.execute({
+                            date: appointmentDate,
+                            provider_id: '123123',
+                        })];
+                case 1:
+                    _a.sent();
+                    expect(createAppointment.execute({
+                        date: appointmentDate,
+                        provider_id: '123123',
+                    })).rejects.toBeInstanceOf(AppError_1.default);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});

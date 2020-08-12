@@ -1,23 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -59,30 +40,62 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Appointment_1 = __importDefault(require("../infra/typeorm/entities/Appointment"));
-var AppointmentsRepository = /** @class */ (function (_super) {
-    __extends(AppointmentsRepository, _super);
-    function AppointmentsRepository() {
-        return _super !== null && _super.apply(this, arguments) || this;
+var User_1 = __importDefault(require("../entities/User"));
+var UsersRepository = /** @class */ (function () {
+    function UsersRepository() {
+        this.ormRepository = typeorm_1.getRepository(User_1.default);
     }
-    AppointmentsRepository.prototype.findByDate = function (date) {
+    UsersRepository.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var findAppointment;
+            var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.findOne({
-                            where: { date: date },
-                        })];
+                    case 0: return [4 /*yield*/, this.ormRepository.findOne(id)];
                     case 1:
-                        findAppointment = _a.sent();
-                        return [2 /*return*/, findAppointment || null];
+                        user = _a.sent();
+                        return [2 /*return*/, user];
                 }
             });
         });
     };
-    AppointmentsRepository = __decorate([
-        typeorm_1.EntityRepository(Appointment_1.default)
-    ], AppointmentsRepository);
-    return AppointmentsRepository;
-}(typeorm_1.Repository));
-exports.default = AppointmentsRepository;
+    UsersRepository.prototype.findByEmail = function (email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.ormRepository.findOne({
+                            where: { email: email },
+                        })];
+                    case 1:
+                        user = _a.sent();
+                        return [2 /*return*/, user];
+                }
+            });
+        });
+    };
+    UsersRepository.prototype.save = function (user) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.ormRepository.save(user)];
+            });
+        });
+    };
+    UsersRepository.prototype.create = function (_a) {
+        var name = _a.name, email = _a.email, password = _a.password;
+        return __awaiter(this, void 0, void 0, function () {
+            var user;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        user = this.ormRepository.create({ name: name, email: email, password: password });
+                        return [4 /*yield*/, this.ormRepository.save(user)];
+                    case 1:
+                        _b.sent();
+                        return [2 /*return*/, user];
+                }
+            });
+        });
+    };
+    return UsersRepository;
+}());
+exports.default = UsersRepository;
