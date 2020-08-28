@@ -79,11 +79,13 @@ describe('CreateUser', function () {
                         })];
                 case 1:
                     _a.sent();
-                    expect(createUser.execute({
-                        name: 't123',
-                        email: 't123@gmail.com',
-                        password: '123',
-                    })).rejects.toBeInstanceOf(AppError_1.default);
+                    return [4 /*yield*/, expect(createUser.execute({
+                            name: 't123',
+                            email: 't123@gmail.com',
+                            password: '123',
+                        })).rejects.toBeInstanceOf(AppError_1.default)];
+                case 2:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });

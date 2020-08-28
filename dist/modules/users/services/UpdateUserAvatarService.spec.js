@@ -73,14 +73,19 @@ describe('UpdateUserAvatar', function () {
     it('shold not be able to update avatar from non exist user', function () { return __awaiter(void 0, void 0, void 0, function () {
         var fakeUsersRepository, fakeStorageProvider, updateUserAvatar;
         return __generator(this, function (_a) {
-            fakeUsersRepository = new FakeUsersRepository_1.default();
-            fakeStorageProvider = new FakeStorageProvider_1.default();
-            updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
-            expect(updateUserAvatar.execute({
-                user_id: 'wewfwef',
-                avatarfileName: 'avatar.jpg',
-            })).rejects.toBeInstanceOf(AppError_1.default);
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    fakeUsersRepository = new FakeUsersRepository_1.default();
+                    fakeStorageProvider = new FakeStorageProvider_1.default();
+                    updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
+                    return [4 /*yield*/, expect(updateUserAvatar.execute({
+                            user_id: 'wewfwef',
+                            avatarfileName: 'avatar.jpg',
+                        })).rejects.toBeInstanceOf(AppError_1.default)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
         });
     }); });
     it('shold delete old avatar when updating new one', function () { return __awaiter(void 0, void 0, void 0, function () {

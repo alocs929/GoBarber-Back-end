@@ -5,4 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var tsyringe_1 = require("tsyringe");
 var DiskStorageProvider_1 = __importDefault(require("./StorageProvider/implementations/DiskStorageProvider"));
+var EtherealMailProvider_1 = __importDefault(require("./MailProvider/Implementations/EtherealMailProvider"));
+// import IMailProvider from './MailProvider/models/IMailProvider';
 tsyringe_1.container.registerSingleton('StorageProvider', DiskStorageProvider_1.default);
+tsyringe_1.container.registerSingleton('MailProvider', EtherealMailProvider_1.default);

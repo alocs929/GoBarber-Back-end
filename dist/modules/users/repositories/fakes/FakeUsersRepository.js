@@ -41,11 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var User_1 = __importDefault(require("@modules/users/infra/typeorm/entities/User"));
 var uuidv4_1 = require("uuidv4");
-var UsersRepository = /** @class */ (function () {
-    function UsersRepository() {
+var FakeUsersRepository = /** @class */ (function () {
+    function FakeUsersRepository() {
         this.users = [];
     }
-    UsersRepository.prototype.findById = function (id) {
+    FakeUsersRepository.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var user;
             return __generator(this, function (_a) {
@@ -54,7 +54,7 @@ var UsersRepository = /** @class */ (function () {
             });
         });
     };
-    UsersRepository.prototype.findByEmail = function (email) {
+    FakeUsersRepository.prototype.findByEmail = function (email) {
         return __awaiter(this, void 0, void 0, function () {
             var user;
             return __generator(this, function (_a) {
@@ -63,7 +63,7 @@ var UsersRepository = /** @class */ (function () {
             });
         });
     };
-    UsersRepository.prototype.save = function (user) {
+    FakeUsersRepository.prototype.save = function (user) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 this.users.push(user);
@@ -71,7 +71,7 @@ var UsersRepository = /** @class */ (function () {
             });
         });
     };
-    UsersRepository.prototype.create = function (_a) {
+    FakeUsersRepository.prototype.create = function (_a) {
         var name = _a.name, email = _a.email, password = _a.password;
         return __awaiter(this, void 0, void 0, function () {
             var user;
@@ -83,6 +83,6 @@ var UsersRepository = /** @class */ (function () {
             });
         });
     };
-    return UsersRepository;
+    return FakeUsersRepository;
 }());
-exports.default = UsersRepository;
+exports.default = FakeUsersRepository;
