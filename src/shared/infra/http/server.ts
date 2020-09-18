@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import cors from 'cors';
+import { errors } from 'celebrate';
 
 import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
@@ -17,6 +18,8 @@ app.use(express.json()); // esse vem primeiro para que seja convertido antes de
 // chegar nas rotas
 app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes); // esse trecho é como se o index.ts estivesse aqui
+
+app.use(errors());
 
 // middlewares para tratar erros
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
