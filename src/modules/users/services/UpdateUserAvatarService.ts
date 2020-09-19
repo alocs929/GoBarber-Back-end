@@ -34,12 +34,15 @@ class UpdateUserAvatarService {
     if (user.avatar) {
       await this.storageProvider.deleteFile(user.avatar);
     }
-    const filename = await this.storageProvider.saveFalie(avatarfileName);
+
+    console.log('bug');
+    const filename = await this.storageProvider.saveFile(avatarfileName);
+    console.log('passou');
 
     user.avatar = filename;
 
     await this.usersRepository.save(user);
-
+    console.log('3');
     return user;
   }
 }
