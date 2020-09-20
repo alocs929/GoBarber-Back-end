@@ -1,6 +1,6 @@
 import path from 'path';
-import multer, { StorageEngine } from 'multer';
 import crypto from 'crypto';
+import multer, { StorageEngine } from 'multer';
 
 const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
 
@@ -8,14 +8,14 @@ interface IUploadConfig {
   driver: 's3' | 'disk';
 
   tmpFolder: string;
-
-  uploadsFolders: string;
+  uploadsFolder: string;
 
   multer: {
     storage: StorageEngine;
   };
 
   config: {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     disk: {};
     aws: {
       bucket: string;

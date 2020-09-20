@@ -1,4 +1,3 @@
-
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 import { injectable, inject } from 'tsyringe';
@@ -35,7 +34,10 @@ class AuthenticateUserService {
       throw new AppError('Incorrect email/password comination.', 401);
     }
 
-    const passwordMatched = await this.hashProvider.compareHash(password, user.password);
+    const passwordMatched = await this.hashProvider.compareHash(
+      password,
+      user.password,
+    );
 
     if (!passwordMatched) {
       throw new AppError('Incorrect email/password comination.', 401);
