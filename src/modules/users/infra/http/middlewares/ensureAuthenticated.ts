@@ -19,9 +19,11 @@ export default function ensureAuthenticated(
   if (!authHeadet) {
     throw new AppError('JWT token missing', 401);
   }
+
   const { secret } = authConfig.jwt;
   const [, token] = authHeadet.split(' ');
 
+  // console.log('##########');
   try {
     const decoded = verify(token, secret); // aqui retorna um tipo que na exist
     // cria o tipo com uma interface
